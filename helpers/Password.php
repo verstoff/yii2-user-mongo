@@ -40,7 +40,7 @@ class Password
      */
     public static function validate($password, $hash)
     {
-        return Security::validatePassword($password, $hash);
+        return \Yii::$app->security->validatePassword($password, $hash);
     }
 
     /**

@@ -12,7 +12,7 @@
 namespace hipstercreative\user;
 
 use yii\base\Component;
-
+use yii\mongodb\Query;
 /**
  * ModelManager is used in order to create models and find users.
  *
@@ -75,7 +75,7 @@ class ModelManager extends Component
      */
     public function findUserById($id)
     {
-        return $this->findUser(['_id' => $id])->one();
+        return $this->findUser(['_id' => $id])->all()[0];
     }
 
     /**
@@ -87,7 +87,7 @@ class ModelManager extends Component
      */
     public function findUserByUsername($username)
     {
-        return $this->findUser(['username' => $username])->one();
+        return $this->findUser(['username' => $username])->all()[0];
     }
 
     /**
@@ -99,7 +99,7 @@ class ModelManager extends Component
      */
     public function findUserByEmail($email)
     {
-        return $this->findUser(['email' => $email])->one();
+        return $this->findUser(['email' => $email])->all()[0];
     }
 
     /**
@@ -111,6 +111,7 @@ class ModelManager extends Component
      */
     public function findUserByUsernameOrEmail($value)
     {
+
         if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
             return $this->findUserByEmail($value);
         }
@@ -128,7 +129,7 @@ class ModelManager extends Component
      */
     public function findUserByIdAndConfirmationToken($id, $token)
     {
-        return $this->findUser(['_id' => $id, 'confirmation_token' => $token])->one();
+        return $this->findUser(['_id' => $id, 'confirmation_token' => $token])->all()[0];
     }
 
     /**
@@ -141,7 +142,7 @@ class ModelManager extends Component
      */
     public function findUserByIdAndRecoveryToken($id, $token)
     {
-        return $this->findUser(['_id' => $id, 'recovery_token' => $token])->one();
+        return $this->findUser(['_id' => $id, 'recovery_token' => $token])->all()[0];
     }
 
     /**
@@ -152,7 +153,10 @@ class ModelManager extends Component
      */
     public function findUser($condition)
     {
-        return $this->createUserQuery()->where($condition);
+        $className = 'hipstercreative\user\models\User';
+        $class = new $className();
+        return $class::find()->select($class->attributes())->where($condition);
+
     }
 
     /**
