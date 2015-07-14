@@ -16,7 +16,6 @@ use hipstercreative\user\helpers\Password;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\mongodb\ActiveRecord;
-use yii\helpers\Security;
 use yii\helpers\Url;
 use yii\web\IdentityInterface;
 
@@ -361,7 +360,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if ($this->validate()) {
             if ($this->module->confirmable) {
-                $this->confirmation_token = Security::generateRandomKey();
+                $this->confirmation_token = \Yii::$app->security->generateRandomKey();
                 $this->confirmation_sent_at = time();
                 $this->save(false);
                 $this->module->mailer->sendReconfirmationMessage($this);
@@ -436,7 +435,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     protected function generateConfirmationData()
     {
-        $this->confirmation_token = Security::generateRandomKey();
+        $this->confirmation_token = \Yii::$app->security->generateRandomKey();
         $this->confirmation_sent_at = time();
         $this->confirmed_at = null;
     }
@@ -516,7 +515,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function sendRecoveryMessage()
     {
-        $this->recovery_token = Security::generateRandomKey();
+        $this->recovery_token = \Yii::$app->security->generateRandomKey();
         $this->recovery_sent_at = time();
         $this->save(false);
 
@@ -557,7 +556,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->setAttribute('auth_key', Security::generateRandomKey());
+            $this->setAttribute('auth_key', \Yii::$app->security->generateRandomKey());
             $this->setAttribute('role', $this->module->defaultRole);
         }
 
