@@ -11,8 +11,6 @@
 
 namespace hipstercreative\user\helpers;
 
-use yii\helpers\Security;
-
 /**
  * Password helper.
  *
@@ -28,7 +26,7 @@ class Password
      */
     public static function hash($password)
     {
-        return Security::generatePasswordHash($password, \Yii::$app->getModule('user')->cost);
+        return \Yii::$app->security->generatePasswordHash($password, \Yii::$app->getModule('user')->cost);
     }
 
     /**
