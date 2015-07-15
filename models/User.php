@@ -360,7 +360,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if ($this->validate()) {
             if ($this->module->confirmable) {
-                $this->confirmation_token = \Yii::$app->security->generateRandomKey();
+                $this->confirmation_token = \Yii::$app->security->generateRandomString();
                 $this->confirmation_sent_at = time();
                 $this->save(false);
                 $this->module->mailer->sendReconfirmationMessage($this);
@@ -435,7 +435,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     protected function generateConfirmationData()
     {
-        $this->confirmation_token = \Yii::$app->security->generateRandomKey();
+        $this->confirmation_token = \Yii::$app->security->generateRandomString();
         $this->confirmation_sent_at = time();
         $this->confirmed_at = null;
     }
@@ -515,7 +515,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function sendRecoveryMessage()
     {
-        $this->recovery_token = \Yii::$app->security->generateRandomKey();
+        $this->recovery_token = \Yii::$app->security->generateRandomString();
         $this->recovery_sent_at = time();
         $this->save(false);
 
@@ -556,7 +556,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->setAttribute('auth_key', \Yii::$app->security->generateRandomKey());
+            $this->setAttribute('auth_key', \Yii::$app->security->generateRandomString());
             $this->setAttribute('role', $this->module->defaultRole);
         }
 
